@@ -8,6 +8,10 @@ import {
   getDoc,
   query,
   where,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  deleteField,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -47,6 +51,20 @@ class FirebaseManager {
       console.error(e);
     }
     return docRef.id;
+  }
+
+  // set doc 은 만들거나 덮어씀, but  merge 옵션을 주면, 덮어쓰지않고, 바뀐데이터와, 추가된 데이터만 업데이트함
+  async createDocWithID(path, data) {
+    if (typeof data !== "object") return;
+
+    let result;
+    const collectionRef = doc(this.db, path);
+    try {
+      result = await setDoc(collectionRef, data, { merge: true });
+    } catch (e) {
+      console.log(e);
+    }
+    return result;
   }
 
   async readDocs(collectionName) {
@@ -119,6 +137,32 @@ class FirebaseManager {
       console.log(e);
     }
     return result;
+  }
+
+  async updateDoc(path, data) {
+    if (typeof data !== "object") return;
+
+    const docRef = doc(this.db, path);
+    let result;
+    try {
+      result = await updateDoc(docRef, data);
+    } catch (e) {
+      console.log(e);
+    }
+    return result;
+  }
+
+  async deleteDocWithID(path, docID) {
+    const docRef = doc(this.db, path, docID);
+
+    await deleteDoc(docRef);
+  }
+
+  async deleteFieldWithID(path, docID, field) {
+    const docRef = doc(this.db, path, docID);
+    await updateDoc(docRef, {
+      ["field"]: deleteField(),
+    });
   }
 }
 
