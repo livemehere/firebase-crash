@@ -23,11 +23,16 @@ function App() {
   };
 
   const handleReadDoc = async () => {
-    // const doc = await firebaseManager.readDoc('posts', '9weQq1QhOBvzKdWySzWi');
-    const doc = await firebaseManager.readDocByPath(
-      "posts/lfj3n4JJg2QmvJLJlCgG/comments/mFknQBVo44w45gqJsDV4"
-    );
+    const doc = await firebaseManager.readDoc("posts", "lfj3n4JJg2QmvJLJlCgG");
+    // const doc = await firebaseManager.readDocByPath(
+    //   "posts/lfj3n4JJg2QmvJLJlCgG/comments/mFknQBVo44w45gqJsDV4"
+    // );
     console.log(doc);
+  };
+
+  const handleReadDocWithCondition = async () => {
+    const docs = await firebaseManager.readDocsWithCondition("posts");
+    console.log(docs);
   };
 
   return (
@@ -36,6 +41,9 @@ function App() {
       <button onClick={handleCreateDoc}>특정 컬렉션에 Doc 생성하기</button>
       <button onClick={handleReadDocs}>특정 컬렉션에 Doc 모두 읽기</button>
       <button onClick={handleReadDoc}>특정 컬렉션에 특정 Doc 읽기</button>
+      <button onClick={handleReadDocWithCondition}>
+        특정 컬렉션에 조건으로 Doc 읽기
+      </button>
     </div>
   );
 }

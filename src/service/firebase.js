@@ -6,6 +6,8 @@ import {
   getDocs,
   doc,
   getDoc,
+  query,
+  where,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -101,6 +103,22 @@ class FirebaseManager {
       console.log(e);
     }
     return targetDoc.data();
+  }
+
+  async readDocsWithCondition(collectionName) {
+    let result = [];
+    const collectionRef = collection(this.db, collectionName);
+    try {
+      const querySnapshot = await getDocs(
+        query(collectionRef, where("view", ">", 2))
+      );
+      querySnapshot.forEach((doc) => {
+        result.push(doc.data());
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    return result;
   }
 }
 
